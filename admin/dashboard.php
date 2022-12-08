@@ -4,6 +4,14 @@ ini_set('display_startup_errors',1);
 error_reporting(E_ALL);
 require '../php-includes/connect.php';
 require 'php-includes/check-login.php';
+$query = "SELECT * FROM lever ORDER BY id DESC limit 1";
+  $stmt = $db->prepare($query);
+  $stmt->execute();
+  $rows = $stmt->fetch(PDO::FETCH_ASSOC);
+  if ($stmt->rowCount()>0) {
+  $c = $rows['c'];
+  $ppm = $rows['ppm'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,7 +40,7 @@ require 'php-includes/check-login.php';
       <!-- End Navbar -->
       <div class="content">
       <div class="row">
-          <div class="col-lg-3 col-md-6 col-sm-6">
+          <div class="col-lg-6 col-md-6 col-sm-6">
             <div class="card card-stats">
               <div class="card-body ">
                 <div class="row">
@@ -43,8 +51,8 @@ require 'php-includes/check-login.php';
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Total eggs</p>
-                      <p class="card-title">25<p>
+                      <p class="card-category">Temperature</p>
+                      <p class="card-title"><?php echo $c;?> C<p>
                     </div>
                   </div>
                 </div>
@@ -58,71 +66,19 @@ require 'php-includes/check-login.php';
               </div>
             </div>
           </div>
-          <div class="col-lg-3 col-md-6 col-sm-6">
+          <div class="col-lg-6 col-md-6 col-sm-6">
             <div class="card card-stats">
               <div class="card-body ">
                 <div class="row">
                   <div class="col-5 col-md-4">
                     <div class="icon-big icon-warning">
-                      <i class="nc-icon nc-email-85 text-success"></i>
+                      <i class="nc-icon nc-box-2 text-success"></i>
                     </div>
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Help messeges</p>
-                      <p class="card-title">5<p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                  <i class="fa fa-calendar-o"></i>
-                  Last day
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-6 col-sm-6">
-            <div class="card card-stats">
-              <div class="card-body ">
-                <div class="row">
-                  <div class="col-5 col-md-4">
-                    <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-istanbul text-danger"></i>
-                    </div>
-                  </div>
-                  <div class="col-7 col-md-8">
-                    <div class="numbers">
-                      <p class="card-category">Total stores</p>
-                      <p class="card-title">23<p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                  <i class="fa fa-clock-o"></i>
-                  In the last hour
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-6 col-sm-6">
-            <div class="card card-stats">
-              <div class="card-body ">
-                <div class="row">
-                  <div class="col-5 col-md-4">
-                    <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-circle-10 text-primary"></i>
-                    </div>
-                  </div>
-                  <div class="col-7 col-md-8">
-                    <div class="numbers">
-                      <p class="card-category">Customers</p>
-                      <p class="card-title">+45K<p>
+                      <p class="card-category">Dissolved solids</p>
+                      <p class="card-title"><?php echo $ppm;?> ppm<p>
                     </div>
                   </div>
                 </div>
@@ -132,73 +88,6 @@ require 'php-includes/check-login.php';
                 <div class="stats">
                   <i class="fa fa-refresh"></i>
                   Update now
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="content">
-            <div class="card card-plain">
-              <div class="card-header">
-                <h4 class="card-title">Reported time</h4>
-              </div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table class="table">
-                    <thead class=" text-primary">
-                      <th>
-                        Time
-                      </th>
-                      <th>
-                        PH
-                      </th>
-                      <th>
-                        Trubidity
-                      </th>
-                      <th>
-                        Temp
-                      </th>
-                    </thead>
-                    <tbody>
-                    <?php
-                    $sql = "SELECT * FROM farmer";
-                    $stmt = $db->prepare($sql);
-                    $stmt->execute();
-                    if ($stmt->rowCount() > 0) {
-                        $count = 1;
-                        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        ?>
-                      <tr>
-                        <td>
-                        <?php echo $row['names'];?>
-                        </td>
-                        <td>
-                        <?php echo $row['email'];?>
-                        </td>
-                        <td>
-                        <?php echo $row['phone'];?>
-                        </td>
-                        <td>
-                        <?php echo $row['address'];?>
-                        </td>
-                      </tr>
-                      <?php
-                        $count++;
-                        }
-                    }
-                    if(isset($_POST['delete'])){
-                        $sql ="DELETE FROM farmer WHERE id = ?";
-                        $stm = $db->prepare($sql);
-                        if ($stm->execute(array($sid))) {
-                            print "<script>alert('Famer deleted');window.location.assign('farmers.php')</script>";
-                
-                        } else {
-                            print "<script>alert('Fail');window.location.assign('farmers.php')</script>";
-                        }
-                    }
-                    ?>
-                    </tbody>
-                  </table>
                 </div>
               </div>
             </div>
