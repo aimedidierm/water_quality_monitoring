@@ -5,9 +5,11 @@ LiquidCrystal_I2C lcd(0x27,20,4);
 #define TdsSensorPin A0
 #define VREF 5.0              // analog reference voltage(Volt) of the ADC
 #define SCOUNT  30            // sum of sample point
- store the analog value in the array, read from ADC
-
-int analogBuffer[SCOUNT];     //int analogBufferTemp[SCOUNT];
+#define green 6
+#define red 7
+#define buzzer 8
+int analogBuffer[SCOUNT];     // store the analog value in the array, read from ADC
+int analogBufferTemp[SCOUNT];
 int analogBufferIndex = 0;
 int copyIndex = 0;
 
@@ -40,17 +42,22 @@ int getMedianNum(int bArray[], int iFilterLen){
 }
 
 void setup(){
-  lcd.init();
+  Serial.begin(115200);
+  lcd.init();                      // initialize the lcd 
   lcd.init();
   // Print a message to the LCD.
   lcd.backlight();
-  Serial.begin(115200);
+  lcd.setCursor(3,0);
   pinMode(TdsSensorPin,INPUT);
-  
+  pinMode(green,OUTPUT);
+  pinMode(red,OUTPUT);
+  pinMode(buzzer,OUTPUT);
+  lcd.clear();
   lcd.setCursor(0,0);
   lcd.print("Water quality");
   lcd.setCursor(0,1);
-  lcd.print("Monitoring!");
+  lcd.print("monitoring");
+  digitalWrite(green, HIGH);
   delay(3000);
 }
 
@@ -81,10 +88,28 @@ void loop(){
       
       //convert voltage value to tds value
       tdsValue=(133.42*compensationVoltage*compensationVoltage*compensationVoltage - 255.86*compensationVoltage*compensationVoltage + 857.39*compensationVoltage)*0.5;
+      
+      //Serial.print("voltage:");
+      //Serial.print(averageVoltage,2);
+      //Serial.print("V   ");
       lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("Good quality");
       lcd.print("TDS Value:");
       lcd.print(tdsValue,0);
-      lcd.print("ppm");
+      lcd.println("ppm");
+      if (tdsValue > 0) {
+        lowq();
+      }
     }
   }
 }
+void lowq(){
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Low quality");
+  digitalWrite(green, LOW);
+  digitalWrite(red, HIGH);
+  tone(buzzer, 1000, 500);
+  delay(2000);
+  }
