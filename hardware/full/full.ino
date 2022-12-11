@@ -8,6 +8,7 @@ LiquidCrystal_I2C lcd(0x27,20,4);
 #define green 6
 #define red 7
 #define buzzer 8
+int temp=20;
 int analogBuffer[SCOUNT];     // store the analog value in the array, read from ADC
 int analogBufferTemp[SCOUNT];
 int analogBufferIndex = 0;
@@ -95,9 +96,13 @@ void loop(){
       lcd.clear();
       lcd.setCursor(0,0);
       lcd.print("Good quality");
+      lcd.setCursor(0,1);
       lcd.print("TDS Value:");
       lcd.print(tdsValue,0);
-      lcd.println("ppm");
+      lcd.println("ppm ");
+      lcd.print("Temp");
+      lcd.print(temp);
+      lcd.println(" C");
       if (tdsValue > 0) {
         lowq();
       }
