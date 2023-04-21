@@ -1,6 +1,10 @@
-# water_quality
-Water quality monitoring system which will monitor the properties of water and display them on the website platform.
-Full
-https://circuitdigest.com/microcontroller-projects/arduino-nodemcu-based-smart-water-quality-monitoring-system-using-iot
-TDS meter
-https://randomnerdtutorials.com/arduino-tds-water-quality-sensor/
+# Water quality monitoring
+It will monitor the properties of water and display them on the website platform and provide warning based on the quality.
+
+# Setup
+To set up this project is easy, Just clone it from github.
+## Import database 
+import the sql file which is located under `/db/water_quality_monitoring.sql`
+
+# Contributing
+Contributions are welcome!
